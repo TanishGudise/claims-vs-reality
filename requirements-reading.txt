@@ -1,0 +1,4 @@
+behaviors==0.0.1a2
+fxtr==0.0.1a3
+docent==0.1.88
+anthropic==1.15.0

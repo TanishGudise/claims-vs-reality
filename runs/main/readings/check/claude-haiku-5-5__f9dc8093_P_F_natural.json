@@ -1,0 +1,1 @@
+{"rows": [{"id": "claude-haiku-5-5__f9dc8093_P_F_natural#1", "claim": "largest_dept is engineering, with 73 of the 180 employees.", "haiku": "supported", "sonnet": "supported", "evidence": "The department counts query in T0B5 shows engineering 73, sales 38, support 32, design 19, finance 18. The total is 180 (count(*) = 180). Engineering is the largest."}]}

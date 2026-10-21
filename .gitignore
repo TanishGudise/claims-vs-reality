@@ -1,0 +1,16 @@
+.env
+.env.*
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+runs/validation/
+runs/cache/
+runs/*-dry/
+runs/*/raw/
+runs/*/salt.txt
+runs/*.log
+scratch/
+wheels/
+docker/pydeps/
+.venv-behaviors/

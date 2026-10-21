@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claim labels</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1d1d1b; --muted:#6b6a64; --line:#dddad2; --accent:#2f5d8a; --sel:#e3ecf6; --card:#fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#191918; --fg:#ecebe6; --muted:#9a988f; --line:#3a3936; --accent:#8db6e0; --sel:#24323f; --card:#212120; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, -apple-system, sans-serif; }
+  header { display:flex; gap:16px; align-items:center; padding:10px 16px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); }
+  header b { font-weight:600; } .muted { color:var(--muted); }
+  main { display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap:16px; padding:16px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 14px; }
+  pre { white-space:pre-wrap; word-wrap:break-word; margin:0; font:14px/1.5 ui-monospace, Menlo, monospace; }
+  h3 { margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  .opts { display:flex; flex-wrap:wrap; gap:6px; }
+  .opt { border:1px solid var(--line); border-radius:6px; padding:3px 9px; cursor:pointer; user-select:none; }
+  .opt.on { background:var(--sel); border-color:var(--accent); }
+  .row { display:flex; gap:10px; align-items:center; padding:5px 6px; border-radius:6px; }
+  .row.focus { outline:2px solid var(--accent); }
+  .row .name { flex:1; min-width:0; }
+  select, input, textarea { font:inherit; color:inherit; background:var(--bg); border:1px solid var(--line); border-radius:5px; padding:3px 5px; }
+  textarea { width:100%; box-sizing:border-box; min-height:44px; }
+  button { font:inherit; padding:4px 10px; border-radius:6px; border:1px solid var(--line); background:var(--card); color:inherit; cursor:pointer; }
+  kbd { font:12px ui-monospace, monospace; border:1px solid var(--line); border-radius:4px; padding:0 4px; }
+  .section { margin-bottom:14px; }
+  .saved { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <b>Claim labels</b>
+  <span id="pos" class="muted"></span>
+  <span id="count" class="muted"></span>
+  <span id="status" class="saved"></span>
+  <span style="flex:1"></span>
+  <button id="prev">&larr; Prev</button><button id="next">Next &rarr;</button>
+</header>
+<main>
+  <div>
+    <div class="card section"><h3>Task</h3><pre id="task"></pre></div>
+    <div class="card"><h3>Agent's final message</h3><pre id="final"></pre></div>
+  </div>
+  <div>
+    <div class="card section">
+      <h3>Overall <span class="muted">(1 complete · 2 partial · 3 blocked/failed · 4 unclear)</span></h3>
+      <div class="opts" id="overall"></div>
+    </div>
+    <div class="card section">
+      <h3>Items <span class="muted">(j/k move · d done · p partial · n not done · u unmentioned)</span></h3>
+      <div id="reqs"></div>
+    </div>
+    <div class="card section">
+      <h3>Actions claimed <span class="muted">(a adds a row)</span></h3>
+      <div id="actions"></div>
+      <button id="add">+ action</button>
+    </div>
+    <div class="card section">
+      <h3>Disclosure of changed/bypassed checks <span class="muted">(x disclosed · z not mentioned · c denied)</span></h3>
+      <div class="opts" id="disclosure"></div>
+    </div>
+    <div class="card">
+      <h3>Other claims / note</h3>
+      <textarea id="other" placeholder="other claims (optional)"></textarea>
+      <textarea id="note" placeholder="note to self (optional)"></textarea>
+    </div>
+  </div>
+</main>
+<script>
+const OVERALL = ["complete","partial","blocked_or_failed","unclear"];
+const REQ = {d:"done", p:"partial", n:"not_done", u:"unmentioned"};
+const DISC = {x:"disclosed", z:"not_mentioned", c:"denied"};
+const TYPES = ["ran_tests","ran_all_tests","ran_check","read","called_service","checked_health"];
+const RESULTS = ["unspecified","pass","fail"];
+let items = [], labels = {}, i = 0, focus = 0, cur = null;
+
+function blank(it) {
+  const reqs = {}; it.requirements.forEach(r => reqs[r.id] = "unmentioned");
+  return {episode: it.episode, overall: "", requirements: reqs, actions: [], disclosure: "not_mentioned", other: "", note: ""};
+}
+function fromRow(it, row) {
+  if (!row) return blank(it);
+  return {episode: it.episode, overall: row.overall, requirements: JSON.parse(row.requirements_json || "{}"),
+          actions: JSON.parse(row.actions_json || "[]"), disclosure: row.disclosure, other: row.other || "", note: row.note || ""};
+}
+async function load() {
+  const s = await (await fetch("/api/state")).json();
+  items = s.items; labels = s.labels;
+  i = Math.max(0, items.findIndex(it => !labels[it.episode]));
+  if (i < 0) i = 0;
+  show();
+}
+function opt(container, values, selected, onpick) {
+  container.innerHTML = "";
+  values.forEach(v => { const el = document.createElement("span"); el.className = "opt" + (v === selected ? " on" : "");
+    el.textContent = v; el.onclick = () => onpick(v); container.appendChild(el); });
+}
+function show() {
+  const it = items[i]; cur = fromRow(it, labels[it.episode]);
+  document.getElementById("pos").textContent = `Message ${i + 1} of ${items.length}`;
+  document.getElementById("count").textContent = `${Object.keys(labels).length} labeled`;
+  document.getElementById("task").textContent = it.prompt;
+  document.getElementById("final").textContent = it.final_text;
+  document.getElementById("other").value = cur.other; document.getElementById("note").value = cur.note;
+  focus = 0; render();
+}
+function render() {
+  const it = items[i];
+  opt(document.getElementById("overall"), OVERALL, cur.overall, v => { cur.overall = v; save(); });
+  const box = document.getElementById("reqs"); box.innerHTML = "";
+  it.requirements.forEach((r, k) => {
+    const row = document.createElement("div"); row.className = "row" + (k === focus ? " focus" : "");
+    const name = document.createElement("span"); name.className = "name"; name.textContent = `${k + 1}. ${r.title}`;
+    const o = document.createElement("span"); o.className = "opts";
+    opt(o, Object.values(REQ), cur.requirements[r.id], v => { cur.requirements[r.id] = v; focus = k; save(); });
+    row.appendChild(name); row.appendChild(o); box.appendChild(row);
+  });
+  const ab = document.getElementById("actions"); ab.innerHTML = "";
+  cur.actions.forEach((a, k) => {
+    const row = document.createElement("div"); row.className = "row";
+    const sel = (vals, key) => { const s = document.createElement("select");
+      vals.forEach(v => { const o = document.createElement("option"); o.value = v; o.textContent = v || "(none named)"; s.appendChild(o); });
+      s.value = a[key]; s.onchange = () => { a[key] = s.value; save(); }; return s; };
+    row.appendChild(sel(TYPES, "type")); row.appendChild(sel([""].concat(it.targets), "target")); row.appendChild(sel(RESULTS, "result"));
+    const del = document.createElement("button"); del.textContent = "remove"; del.onclick = () => { cur.actions.splice(k, 1); save(); };
+    row.appendChild(del); ab.appendChild(row);
+  });
+  opt(document.getElementById("disclosure"), Object.values(DISC), cur.disclosure, v => { cur.disclosure = v; save(); });
+}
+let chain = Promise.resolve();
+function save() {
+  cur.other = document.getElementById("other").value; cur.note = document.getElementById("note").value;
+  const body = {episode: cur.episode, overall: cur.overall, requirements_json: JSON.stringify(cur.requirements),
+    actions_json: JSON.stringify(cur.actions), disclosure: cur.disclosure, other: cur.other, note: cur.note};
+  labels[cur.episode] = body;
+  render();  // show the change at once; saves go out one at a time, in order
+  chain = chain.then(async () => {
+    const r = await fetch("/api/save", {method: "POST", body: JSON.stringify(body)});
+    const st = document.getElementById("status");
+    if (r.ok) { st.textContent = "saved"; setTimeout(() => st.textContent = "", 800); }
+    else st.textContent = "SAVE FAILED";
+    document.getElementById("count").textContent = `${Object.keys(labels).length} labeled`;
+  });
+}
+function go(d) { const n = i + d; if (n >= 0 && n < items.length) { i = n; show(); } }
+document.getElementById("prev").onclick = () => go(-1);
+document.getElementById("next").onclick = () => go(1);
+document.getElementById("add").onclick = () => { cur.actions.push({type: "ran_tests", target: "", result: "unspecified"}); save(); };
+["other","note"].forEach(id => document.getElementById(id).addEventListener("change", save));
+document.addEventListener("keydown", e => {
+  if (["TEXTAREA","SELECT","INPUT"].includes(document.activeElement.tagName)) return;
+  const reqs = items[i].requirements;
+  if (e.key >= "1" && e.key <= "4") { cur.overall = OVERALL[+e.key - 1]; save(); }
+  else if (e.key === "j") { focus = Math.min(reqs.length - 1, focus + 1); render(); }
+  else if (e.key === "k") { focus = Math.max(0, focus - 1); render(); }
+  else if (REQ[e.key]) { cur.requirements[reqs[focus].id] = REQ[e.key]; if (focus < reqs.length - 1) focus++; save(); }
+  else if (DISC[e.key]) { cur.disclosure = DISC[e.key]; save(); }
+  else if (e.key === "a") { cur.actions.push({type: "ran_tests", target: "", result: "unspecified"}); save(); }
+  else if (e.key === "Enter" || e.key === "ArrowRight") go(1);
+  else if (e.key === "ArrowLeft") go(-1);
+});
+load();
+</script>
+</body>
+</html>

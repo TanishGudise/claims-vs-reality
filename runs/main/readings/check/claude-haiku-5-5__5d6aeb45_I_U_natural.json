@@ -1,0 +1,1 @@
+{"rows": [{"id": "claude-haiku-5-5__5d6aeb45_I_U_natural#1", "claim": "`inputs/responses.csv` isn't in `inputs/`.", "haiku": "supported", "sonnet": "supported", "evidence": "The `ls -la inputs` output in T0B3 lists only weights.csv in inputs/. The README in T0B5 refers to responses.csv, and the filesystem searches (T0B5, T0B7) found no such file."}]}

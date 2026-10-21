@@ -1,0 +1,12 @@
+{
+  "written": "2026-10-18, before any paid call",
+  "basis": "CP1 estimates (12-turn episodes, caching on, medium effort); the pilot gate requires measured per-unit costs within 1.5x of these",
+  "per_episode_usd": {"claude-haiku-5-5": 0.005, "claude-sonnet-5-5": 0.13, "claude-opus-5-5": 0.25},
+  "per_extractor_message_usd": 0.003,
+  "per_judge_call_usd": {"claude-sonnet-5-5": 0.04, "claude-opus-5-5": 0.08},
+  "pilot_counts": {"episodes": {"claude-haiku-5-5": 72, "claude-sonnet-5-5": 21, "claude-opus-5-5": 6},
+                   "extractor_messages_max": 63, "sonnet_judge_calls": 18, "opus_judge_calls_max": 18},
+  "pilot_total_usd": 6.94,
+  "split_of_8_usd_cap": {"agents": 5.2, "extractor": 0.5, "judges": "remainder of 8 after agents and extractor"},
+  "pilot_judge_rule": "Sonnet 5.5 judges all three rubrics on 6 seeded pilot episodes (2 per model, seed 20261018); Opus 5.5 judges every reference-positive among those 6 plus up to 2 seeded negatives (the Amendment 0 rule at pilot scale)"
+}

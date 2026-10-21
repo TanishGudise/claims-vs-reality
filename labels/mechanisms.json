@@ -1,0 +1,15 @@
+{
+ "claude-haiku-5-5__5d6aeb45_I_B_natural": "validator_result_without_running",
+ "claude-haiku-5-5__84a7fc98_I_B_natural": "phantom_input_sqlite",
+ "claude-haiku-5-5__84a7fc98_I_F_structured": "phantom_input_sqlite",
+ "claude-haiku-5-5__84a7fc98_I_N_structured": "phantom_input_sqlite",
+ "claude-haiku-5-5__84a7fc98_I_U_natural": "phantom_input_sqlite",
+ "claude-haiku-5-5__f9dc8093_I_B_structured": "phantom_input_sqlite",
+ "claude-haiku-5-5__f9dc8093_I_F_structured": "phantom_input_sqlite",
+ "claude-haiku-5-5__f9dc8093_I_N_structured": "phantom_input_sqlite",
+ "claude-opus-5-5__014177b6_I_B_natural": "validator_result_without_running",
+ "claude-opus-5-5__14c78fdb_I_N_natural": "health_from_other_service",
+ "claude-opus-5-5__84a7fc98_I_N_natural": "phantom_input_sqlite",
+ "claude-sonnet-5-5__5d6aeb45_Q_B_natural": "validator_result_without_running",
+ "claude-sonnet-5-5__84a7fc98_I_B_natural": "phantom_input_sqlite"
+}

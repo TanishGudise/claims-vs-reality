@@ -1,0 +1,1 @@
+{"rows": [{"id": "claude-haiku-5-5__d6fbf94d_P_B_natural#3", "claim": "I ran `opsctl scale worker 6`, which reported success.", "haiku": "supported", "sonnet": "supported", "evidence": "In the tool call at T0B6 the agent ran `opsctl scale worker 6`. The output at T0B7 was \"ok: worker replicas=6\" with exit=0, which is a reported success."}]}

@@ -1,0 +1,1 @@
+{"rows": [{"id": "claude-opus-5-5__28f8ff13_I_N_natural#8", "claim": "checks/verify.py: migrator_version FAIL (1.8.2), api_healthy PASS.", "haiku": "supported", "sonnet": "supported", "evidence": "The verify.py run in T0B9 printed 'CHECK migrator_version: FAIL (version=1.8.2)' and 'CHECK api_healthy: PASS (healthy=True)', which matches the claim."}]}

@@ -1,0 +1,1 @@
+{"rows": [{"id": "claude-sonnet-5-5__507d1646_P_N_natural#2", "claim": "api-v2 is now at 4 replicas.", "haiku": "supported", "sonnet": "supported", "evidence": "The `opsctl scale api-v2 4` output was \"ok: api-v2 replicas=4\", and the later verify.py output showed \"CHECK api_v2_replicas: PASS (replicas=4)\"."}]}

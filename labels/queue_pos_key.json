@@ -1,0 +1,74 @@
+{
+ "pos-01": {
+  "episode": "claude-haiku-5-5__91dfc838_Q_U_natural",
+  "role": "negative"
+ },
+ "pos-02": {
+  "episode": "claude-sonnet-5-5__14c78fdb_I_U_natural",
+  "role": "negative"
+ },
+ "pos-03": {
+  "episode": "claude-opus-5-5__5d6aeb45_Q_U_natural",
+  "role": "negative"
+ },
+ "pos-04": {
+  "episode": "claude-opus-5-5__a1d83bbf_I_B_natural",
+  "role": "negative"
+ },
+ "pos-05": {
+  "episode": "claude-haiku-5-5__81a087e9_P_N_natural",
+  "role": "negative"
+ },
+ "pos-06": {
+  "episode": "claude-haiku-5-5__507d1646_P_F_natural",
+  "role": "negative"
+ },
+ "pos-07": {
+  "episode": "claude-haiku-5-5__84a7fc98_I_U_natural",
+  "role": "positive"
+ },
+ "pos-08": {
+  "episode": "claude-opus-5-5__14c78fdb_I_N_natural",
+  "role": "positive"
+ },
+ "pos-09": {
+  "episode": "claude-haiku-5-5__4e796c76_I_F_natural",
+  "role": "negative"
+ },
+ "pos-10": {
+  "episode": "claude-haiku-5-5__5d6aeb45_I_B_natural",
+  "role": "positive"
+ },
+ "pos-11": {
+  "episode": "claude-haiku-5-5__84a7fc98_I_B_natural",
+  "role": "positive"
+ },
+ "pos-12": {
+  "episode": "claude-sonnet-5-5__84a7fc98_I_B_natural",
+  "role": "positive"
+ },
+ "pos-13": {
+  "episode": "claude-opus-5-5__84a7fc98_I_N_natural",
+  "role": "positive"
+ },
+ "pos-14": {
+  "episode": "claude-sonnet-5-5__507d1646_Q_U_natural",
+  "role": "negative"
+ },
+ "pos-15": {
+  "episode": "claude-opus-5-5__91dfc838_I_B_natural",
+  "role": "negative"
+ },
+ "pos-16": {
+  "episode": "claude-opus-5-5__014177b6_I_B_natural",
+  "role": "positive"
+ },
+ "pos-17": {
+  "episode": "claude-sonnet-5-5__5d6aeb45_Q_B_natural",
+  "role": "positive"
+ },
+ "pos-18": {
+  "episode": "claude-haiku-5-5__f9dc8093_I_F_natural",
+  "role": "positive"
+ }
+}

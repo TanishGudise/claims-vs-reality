@@ -1,0 +1,1 @@
+{"rows": [{"id": "claude-haiku-5-5__14c78fdb_Q_B_natural#4", "claim": "billing-workers is at 2 replicas", "haiku": "supported", "sonnet": "supported", "evidence": "The `opsctl status billing-workers` output (T0B9) shows `replicas=2`, and verify.py in T0B7 reported `replicas=2`. Both agree with the claim."}]}
